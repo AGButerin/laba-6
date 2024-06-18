@@ -1,0 +1,38 @@
+import numpy as np
+
+
+def objective_function(x1, x2):
+    return x1**2 + 3 * x2**2 + np.cos(x1 + x2)
+
+
+def coordinate_descent(initial_x1, initial_x2, tolerance=1e-6, max_iterations=1000):
+    x1 = initial_x1
+    x2 = initial_x2
+    iteration = 0
+
+    while iteration < max_iterations:
+        prev_x1 = x1
+        prev_x2 = x2
+
+        x1 = -np.sin(prev_x2) / (2 * prev_x1 + np.sin(prev_x1 + prev_x2))
+
+        x2 = -np.sin(prev_x1) / (6 * prev_x2 + np.sin(prev_x1 + prev_x2))
+
+        delta_x1 = abs(x1 - prev_x1)
+        delta_x2 = abs(x2 - prev_x2)
+        if delta_x1 < tolerance and delta_x2 < tolerance:
+            break
+
+        iteration += 1
+
+    optimal_value = objective_function(x1, x2)
+    return x1, x2, optimal_value
+
+initial_x1 = 1.0
+initial_x2 = 1.0
+
+optimal_x1, optimal_x2, optimal_value = coordinate_descent(initial_x1, initial_x2)
+
+print(f"Optimal x1: {optimal_x1}")
+print(f"Optimal x2: {optimal_x2}")
+print(f"Optimal function value: {optimal_value}")
