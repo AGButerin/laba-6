@@ -1,0 +1,44 @@
+#include <iostream>
+#include <cmath>
+
+double objective_function(double x1, double x2) {
+    return x1 * x1 + 3 * x2 * x2 + cos(x1 + x2);
+}
+
+void coordinate_descent() {
+    double x1 = 0.0;
+    double x2 = 0.0;
+
+    double tolerance = 1e-6;
+    int max_iterations = 1000;
+    int iteration = 0;
+
+    while (iteration < max_iterations) {
+        double prev_x1 = x1;
+        double prev_x2 = x2;
+
+        x1 = -sin(prev_x2) / (2 * prev_x1 + sin(prev_x1 + prev_x2));
+
+        x2 = -sin(prev_x1) / (6 * prev_x2 + sin(prev_x1 + prev_x2));
+
+        double delta_x1 = std::abs(x1 - prev_x1);
+        double delta_x2 = std::abs(x2 - prev_x2);
+        if (delta_x1 < tolerance && delta_x2 < tolerance) {
+            break;
+        }
+
+        iteration++;
+    }
+
+    double optimal_value = objective_function(x1, x2);
+    std::cout << "Optimal x1: " << x1 << std::endl;
+    std::cout << "Optimal x2: " << x2 << std::endl;
+    std::cout << "Optimal function value: " << optimal_value << std::endl;
+}
+
+int main() {
+
+    coordinate_descent();
+
+    return 0;
+}
