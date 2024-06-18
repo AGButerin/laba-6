@@ -1,0 +1,53 @@
+#include <iostream>
+#include <cmath>
+
+
+double objective_function(double x1, double x2) {
+    return 7 * pow(x1, 2) + 2 * x1 * x2 + 5 * pow(x2, 2) + x1 - 10 * x2;
+}
+
+
+void gradient(double x1, double x2, double& grad_x1, double& grad_x2) {
+    grad_x1 = 14 * x1 + 2 * x2 + 1;
+    grad_x2 = 2 * x1 + 10 * x2 - 10;
+}
+
+void steepest_descent(double initial_x1, double initial_x2, double tolerance, int max_iterations) {
+    double x1 = initial_x1;
+    double x2 = initial_x2;
+    double grad_x1, grad_x2;
+
+    for (int iteration = 1; iteration <= max_iterations; ++iteration) {
+        gradient(x1, x2, grad_x1, grad_x2);
+
+        x1 -= grad_x1;
+        x2 -= grad_x2;
+
+        double gradient_norm = sqrt(pow(grad_x1, 2) + pow(grad_x2, 2));
+
+        if (gradient_norm < tolerance) {
+            std::cout << "Converged to tolerance level. Iteration: " << iteration << std::endl;
+            break;
+        }
+
+        std::cout << "Iteration: " << iteration << ", x1 = " << x1 << ", x2 = " << x2
+                  << ", Objective function value = " << objective_function(x1, x2) << std::endl;
+    }
+
+    std::cout << "Optimal x1: " << x1 << std::endl;
+    std::cout << "Optimal x2: " << x2 << std::endl;
+    std::cout << "Optimal objective function value: " << objective_function(x1, x2) << std::endl;
+}
+
+int main() {
+    
+    double initial_x1 = 1.0;
+    double initial_x2 = 1.0;
+    double tolerance = 1e-6;
+    int max_iterations = 1000;
+
+    steepest_descent(initial_x1, initial_x2, tolerance, max_iterations);
+
+    return 0;
+}
+
